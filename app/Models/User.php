@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->mot_de_passe;
     }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image_path ? asset('storage/'.$this->image_path) : null;
+    }
 }

@@ -22,7 +22,15 @@ class UpdateProfileRequest extends FormRequest
             'genre' => 'sometimes|string|in:homme,femme,autre',
             'pays' => 'sometimes|string|max:255',
             'ville' => 'sometimes|string|max:255',
-            'image_URL' => 'sometimes|string|url',
+            'image_path' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
+
+        if ($this->isMethod('POST')) {
+            $rules['image_path'] = 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048';
+        } else {
+            $rules['image_path'] = 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048';
+        }
+
+        return $rule;
     }
 }

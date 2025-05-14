@@ -16,11 +16,20 @@ class UtilisateurController extends Controller
         return response()->json($request->user());
     }
 
-    public function updateProfile(UpdateProfileRequest $request)
+    public function updateProfile(UpdateProfileRequest $request, $id)
     {
-        $utilisateur = $request->user();
+        $utilisateur = User::findOrFail($id);
+        $data = $request->validated();
 
-        $utilisateur->update($request->validated());
+        if ($request->hasFile('image')) {
+            // Supprime l'ancienne image
+            if ($utilisateur->image_path) {
+                    Storage::disk('public')->delete($acteur->image_path);
+            }
+            $data['image_path'] = $request->file('image')->store('user', 'public');
+        }
+
+        $utilisateur->update($data);
 
         return response()->json($utilisateur);
     }

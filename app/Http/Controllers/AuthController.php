@@ -14,36 +14,19 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
 
-        $utilisateur =  new User();
+        $utilisateur = User::create([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'email' => $request->email,
+            'mot_de_passe' => Hash::make($request->mot_de_passe),
+            'date_naissance' => $request->date_naissance,
+            'telephone' => $request->telephone,
+            'genre' => $request->genre,
+            'pays' => $request->pays,
+            'ville' => $request->ville,
+            'date_inscription' => now(),
+        ]);
 
-        $utilisateur->nom = $request->nom;
-        $utilisateur->prenom = $request->prenom;
-        $utilisateur->email = $request->email;
-        $utilisateur->mot_de_passe = $request->mot_de_passe;
-        $utilisateur->date_naissance = $request->date_naissance;
-        $utilisateur->telephone = $request->telephone;
-        $utilisateur->genre = $request->genre;
-        $utilisateur->pays = $request->pays;
-        $utilisateur->ville = $request->ville;
-        $utilisateur->date_inscription = now();
-
-        $utilisateur->save();
-
-
-        // User::create([
-        //     'nom' => $request->nom,
-        //     'prenom' => $request->prenom,
-        //     'email' => $request->email,
-        //     'mot_de_passe' => Hash::make($request->mot_de_passe),
-        //     'date_naissance' => $request->date_naissance,
-        //     'telephone' => $request->telephone,
-        //     'genre' => $request->genre,
-        //     'pays' => $request->pays,
-        //     'ville' => $request->ville,
-        //     'date_inscription' => now(),
-        // ]);
-
-        // dd();
 
         $token = $utilisateur->createToken('cinemash_backend_service')->plainTextToken;
 

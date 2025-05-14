@@ -22,7 +22,13 @@ class FilmController extends Controller
 
     public function store(FilmRequest $request)
     {
-        $film = Film::create($request->validated());
+
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('films', 'public');
+        }
+        $film = Film::create($data);
 
         if ($request->has('acteurs')) {
             foreach ($request->acteurs as $acteur) {
@@ -43,7 +49,17 @@ class FilmController extends Controller
     public function update(FilmRequest $request, $id)
     {
         $film = Film::findOrFail($id);
-        $film->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            // Supprime l'ancienne image si elle existe
+            if ($film->image_path) {
+                Storage::disk('public')->delete($film->image_path);
+            }
+            $data['image_path'] = $request->file('image')->store('films', 'public');
+        }
+
+        $film->update($data);
 
         if ($request->has('acteurs')) {
             $film->acteurs()->detach();
