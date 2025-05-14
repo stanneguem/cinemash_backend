@@ -3,46 +3,51 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Billet;
+use App\Models\Paiement;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $table = 'users';
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'nom', 'prenom', 'email', 'date_naissance', 'telephone',
+        'mot_de_passe', 'genre', 'pays', 'ville', 'image_URL',
+        'solde_wallet', 'statut', 'is_admin'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
-        'password',
+        'mot_de_passe',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'date_inscription' => 'datetime',
+    ];
+
+        public function billets()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(Billet::class);
+    }
+
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class);
+    }
+
+    public function billetsRevendus()
+    {
+        return $this->hasMany(Billet::class, 'revendeur_id');
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->mot_de_passe;
     }
 }

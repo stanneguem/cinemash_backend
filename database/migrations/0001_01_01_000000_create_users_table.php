@@ -13,10 +13,20 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nom');
+            $table->string('prenom');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->date('date_naissance');
+            $table->string('telephone');
+            $table->string('mot_de_passe');
+            $table->string('genre');
+            $table->string('pays');
+            $table->string('ville');
+            $table->string('image_URL')->nullable();
+            $table->decimal('solde_wallet', 10, 2)->default(0);
+            $table->dateTime('date_inscription');
+            $table->enum('statut', ['actif', 'inactif', 'banni'])->default('actif');
+            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
